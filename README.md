@@ -64,8 +64,8 @@ You must have the following tools installed on your machine:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/shopverse-mono.git](https://github.com/your-username/shopverse-mono.git)
-    cd shopverse-mono
+    git clone https://github.com/Akshay270406/ShopVerse.git
+    cd ShopVerse
     ```
 
 2.  **Install all dependencies:**
