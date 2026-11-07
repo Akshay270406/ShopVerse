@@ -145,7 +145,7 @@ function PaymentPage() {
             {/* We could list items here, but for simplicity, just show total */}
             <div className="flex justify-between font-bold text-xl mt-4 pt-4 border-t">
               <span>Total:</span>
-              <span>${subtotal.toFixed(2)}</span>
+              <span>₹{subtotal.toFixed(2)}</span>
             </div>
           </div>
 
@@ -156,7 +156,7 @@ function PaymentPage() {
             disabled={loading || cartItems.length === 0}
             className="w-full py-2 bg-blue-600 text-white rounded font-semibold hover:bg-blue-700 disabled:bg-gray-400"
           >
-            {loading ? "Processing..." : `Pay $${subtotal.toFixed(2)} with Razorpay`}
+            {loading ? "Processing..." : `Pay ₹${subtotal.toFixed(2)} with Razorpay`}
           </button>
           <Link 
             href="/shipping" 
