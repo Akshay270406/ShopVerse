@@ -74,14 +74,14 @@ function OrderPage() {
                 <div className="flex-grow">
                   <p className="font-semibold">{item.name}</p>
                   <p className="text-sm text-gray-600">
-                    {item.qty} x ${item.price.toFixed(2)} = ${(item.qty * item.price).toFixed(2)}
+                    {item.qty} x ₹{item.price.toFixed(2)} = ₹{(item.qty * item.price).toFixed(2)}
                   </p>
                 </div>
               </div>
             ))}
           </div>
           <div className="text-right mt-4 text-2xl font-bold">
-            Total: ${order.totalPrice.toFixed(2)}
+            Total: ₹{order.totalPrice.toFixed(2)}
           </div>
         </div>
       </div>
