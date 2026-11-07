@@ -59,7 +59,7 @@ export default function CartPage() {
                     >
                       {item.product.name}
                     </Link>
-                    <div className="text-gray-600">${item.product.price.toFixed(2)}</div>
+                    <div className="text-gray-600">₹{item.product.price.toFixed(2)}</div>
                   </div>
                   
                   {/* Quantity Selector */}
@@ -98,12 +98,12 @@ export default function CartPage() {
               </h2>
               <div className="flex justify-between mb-2">
                 <span className="text-gray-600">Subtotal ({totalItems} items):</span>
-                <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                <span className="font-semibold">₹{subtotal.toFixed(2)}</span>
               </div>
               {/* Add shipping, tax, etc. here later */}
               <div className="flex justify-between font-bold text-xl mt-4 pt-4 border-t">
                 <span>Total:</span>
-                <span>${subtotal.toFixed(2)}</span>
+                <span>₹{subtotal.toFixed(2)}</span>
               </div>
               <button
                 onClick={handleCheckout}
