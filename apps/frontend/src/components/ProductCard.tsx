@@ -34,7 +34,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {product.numReviews} reviews
         </div>
 
-        <h3 className="text-2xl font-bold text-gray-900">${product.price}</h3>
+        <h3 className="text-2xl font-bold text-gray-900">₹{product.price}</h3>
       </div>
     </div>
   );
