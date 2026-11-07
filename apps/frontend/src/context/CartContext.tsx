@@ -5,12 +5,11 @@ import {
   useContext,
   useState,
   useEffect,
+  useCallback,
   ReactNode,
 } from "react";
-import { ICartItem, IProduct } from "@/types";
-import { IShippingAddress } from "@/types";
+import { ICartItem, IProduct, IShippingAddress } from "@/types";
 
-// Define the shape of the cart state and methods
 interface ICartContext {
   cartItems: ICartItem[];
   shippingAddress: IShippingAddress | null;
@@ -20,40 +19,53 @@ interface ICartContext {
   clearCart: () => void;
 }
 
-// Create the context
 const CartContext = createContext<ICartContext | undefined>(undefined);
 
-// Create the provider component
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<ICartItem[]>([]);
-  const [shippingAddress, setShippingAddress] = useState<IShippingAddress | null>(null);
+  const [shippingAddress, setShippingAddress] =
+    useState<IShippingAddress | null>(null);
+  const [isHydrated, setIsHydrated] = useState(false);
 
-  // Load cart from localStorage on initial render
+  // Read persisted state before writing defaults back to localStorage.
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
-    }
-    const storedAddress = localStorage.getItem("shippingAddress");
-    if (storedAddress) {
-      setShippingAddress(JSON.parse(storedAddress));
+    try {
+      const storedCart = localStorage.getItem("cart");
+      if (storedCart) {
+        const parsedCart: unknown = JSON.parse(storedCart);
+        if (Array.isArray(parsedCart)) {
+          setCartItems(parsedCart as ICartItem[]);
+        }
+      }
+
+      const storedAddress = localStorage.getItem("shippingAddress");
+      if (storedAddress) {
+        setShippingAddress(JSON.parse(storedAddress) as IShippingAddress);
+      }
+    } catch (error) {
+      console.error("Could not restore saved cart data:", error);
+      localStorage.removeItem("cart");
+      localStorage.removeItem("shippingAddress");
+    } finally {
+      setIsHydrated(true);
     }
   }, []);
 
-  // Save cart to localStorage whenever it changes
   useEffect(() => {
+    if (!isHydrated) return;
     localStorage.setItem("cart", JSON.stringify(cartItems));
-  }, [cartItems]);
+  }, [cartItems, isHydrated]);
 
   const saveShippingAddress = (address: IShippingAddress) => {
     setShippingAddress(address);
     localStorage.setItem("shippingAddress", JSON.stringify(address));
   };
 
-  const clearCart = () => {
+  // Keep this callback stable for pages that depend on it in useEffect.
+  const clearCart = useCallback(() => {
     setCartItems([]);
     localStorage.removeItem("cart");
-  };
+  }, []);
 
   const addToCart = (product: IProduct, qty: number) => {
     const existItem = cartItems.find((x) => x.product._id === product._id);
@@ -61,7 +73,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     if (existItem) {
       setCartItems(
         cartItems.map((x) =>
-          x.product._id === product._id ? { ...x, qty: qty } : x
+          x.product._id === product._id ? { ...x, qty } : x
         )
       );
     } else {
@@ -89,7 +101,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Create a custom hook for easy context consumption
 export const useCart = () => {
   const context = useContext(CartContext);
   if (context === undefined) {
