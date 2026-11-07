@@ -10,25 +10,25 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  
+
   const router = useRouter();
   const { setUser } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(""); // Clear previous errors
+    setError("");
 
     try {
       const { data } = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
-        { name, email, password }
+        { name, email, password },
+        { withCredentials: true }
       );
-      
-      setUser(data); // Set user in global context
-      router.push("/"); // Redirect to home page
-      
+
+      setUser(data);
+      router.push("/");
     } catch (err: any) {
-      if (err.response && err.response.data && err.response.data.message) {
+      if (err.response?.data?.message) {
         setError(err.response.data.message);
       } else {
         setError("Registration failed. Please try again.");
@@ -36,7 +36,6 @@ export default function RegisterPage() {
     }
   };
 
-  // We are using Tailwind classes that Next.js provided
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <form
@@ -46,9 +45,9 @@ export default function RegisterPage() {
         <h2 className="mb-6 text-2xl font-bold text-center text-gray-800">
           Create Account
         </h2>
-        
+
         {error && <p className="mb-4 text-center text-red-500">{error}</p>}
-        
+
         <div className="mb-4">
           <label className="block mb-2 text-sm font-medium text-gray-700">Name</label>
           <input
