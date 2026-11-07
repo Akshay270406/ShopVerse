@@ -108,7 +108,7 @@ export default function ProductDetailsPage() {
           <div className="border rounded-lg shadow-md p-4 bg-white">
             <div className="flex justify-between mb-2">
               <span className="font-semibold">Price:</span>
-              <span className="text-2xl font-bold">${product.price}</span>
+              <span className="text-2xl font-bold">₹{product.price}</span>
             </div>
             <div className="flex justify-between mb-4">
               <span className="font-semibold">Status:</span>
