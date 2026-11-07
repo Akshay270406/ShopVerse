@@ -1,188 +1,127 @@
-# 🛒 ShopVerse
+# ShopVerse
 
-ShopVerse is a full-stack e-commerce monorepo project built with a modern tech stack. It features a Next.js frontend, a Node.js/Express backend, and a client-side cart, with payments handled by Razorpay.
+ShopVerse is a full-stack e-commerce monorepo with a Next.js frontend, an Express/TypeScript backend, MongoDB persistence, JWT-cookie authentication, and Razorpay checkout.
 
-![Project Status: In Development](https://img.shields.io/badge/status-in_development-yellow)
-![Tech: TypeScript](https://img.shields.io/badge/tech-TypeScript-blue)
-![Tech: Next.js](https://img.shields.io/badge/tech-Next.js-black)
-![Tech: Node.js](httpss://img.shields.io/badge/tech-Node.js-green)
+## Tech stack
 
----
+- **Workspace:** pnpm
+- **Frontend:** Next.js 16, React 19, TypeScript, Tailwind CSS 4, Axios
+- **Backend:** Node.js, Express 5, TypeScript, Mongoose, JWT, bcryptjs
+- **Database:** MongoDB
+- **Payments:** Razorpay (test mode recommended for local development)
 
-## 📸 Demo
+## Features
 
-Place a GIF or screenshots of your application here.
+- User registration, login, and logout using an HTTP-only JWT cookie
+- Product listing and product details
+- Persistent client-side shopping cart
+- Protected shipping, checkout, and order-history pages
+- Razorpay order creation and payment-signature verification
 
-| Home Page | Product Page | Cart |
-| :---: | :---: | :---: |
-|  |  |  |
+## Prerequisites
 
----
+- **Node.js 20.9 or later** (required by Next.js 16)
+- pnpm 10 (the repository declares pnpm 10.20.0)
+- MongoDB Atlas account or a local MongoDB instance
+- Razorpay account and test-mode API keys for payment testing
 
-## 🌟 Features
+## Setup
 
--   **Monorepo Structure:** `pnpm` workspaces for clean separation of frontend and backend.
--   **Full-stack TypeScript:** Type safety across the entire application.
--   **User Authentication:** Secure JWT (httpOnly cookie) authentication for user registration and login.
--   **Protected Routes:** Backend and frontend middleware to protect routes like checkout and order history.
--   **Product Catalog:** Fetches and displays a list of products and individual product details.
--   **Client-side Cart:** Persistent cart using React Context and `localStorage`.
--   **Full Checkout Flow:**
-    1.  Collect Shipping Address.
-    2.  Confirm Order & Total.
-    3.  Process payment via **Razorpay**.
--   **Order History:** A "My Orders" page for users to view their past orders.
+1. Clone the repository and enter the project directory:
 
----
+   ```bash
+   git clone https://github.com/Akshay270406/ShopVerse.git
+   cd ShopVerse
+   ```
 
-## 🔧 Tech Stack
+2. Install the workspace dependencies:
 
-| Area | Technologies |
-| :--- | :--- |
-| **Monorepo** | **pnpm Workspaces** |
-| **Frontend** | React (Next.js 14+), TypeScript, Tailwind CSS, React Context, Axios |
-| **Backend** | Node.js, Express, TypeScript, Mongoose, JWT, bcryptjs |
-| **Database** | MongoDB (Atlas) |
-| **Payments** | Razorpay |
+   ```bash
+   pnpm install
+   ```
 
----
+3. Create the backend environment file by copying `apps/backend/.env.example` to `apps/backend/.env`, then replace the placeholders:
 
-## 🚀 Getting Started
+   ```ini
+   MONGO_URI=mongodb+srv://<username>:<password>@<cluster>/<database>
+   PORT=5000
+   JWT_SECRET=use_a_long_random_secret
+   RAZORPAY_KEY_ID=rzp_test_your_key_id
+   RAZORPAY_KEY_SECRET=your_razorpay_test_key_secret
+   ```
 
-Follow these instructions to get a local copy up and running.
+4. Create the frontend environment file by copying `apps/frontend/.env.example` to `apps/frontend/.env.local`:
 
-### 1. Prerequisites
+   ```ini
+   NEXT_PUBLIC_API_URL=http://localhost:5000/api
+   NEXT_PUBLIC_RAZORPAY_KEY_ID=rzp_test_your_key_id
+   ```
 
-You must have the following tools installed on your machine:
--   [Node.js](https://nodejs.org/) (v18 or higher)
--   [pnpm](https://pnpm.io/installation) (Install with `npm install -g pnpm`)
--   [Git](https://git-scm.com/)
--   [MongoDB](https://www.mongodb.com/try/download/community) (or a free MongoDB Atlas account)
--   A **Razorpay Account** (for API keys)
+   Use the matching Razorpay **test** Key ID in both files. Keep the Razorpay secret only in the backend environment file. Never commit either local environment file.
 
-### 2. Installation & Setup
+## Run locally
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/Akshay270406/ShopVerse.git
-    cd ShopVerse
-    ```
+Open two terminals from the repository root.
 
-2.  **Install all dependencies:**
-    `pnpm` will read the `pnpm-workspace.yaml` and install packages for *both* frontend and backend.
-    ```bash
-    pnpm install
-    ```
+**Terminal 1 — backend**
 
-### 3. Environment Variables
-
-You need to create two `.env` files.
-
-**A. Backend:**
-Create a file at `apps/backend/.env`
-
-```ini
-# --- MongoDB ---
-# Get this from your MongoDB Atlas cluster
-MONGO_URI=mongodb+srv://<user>:<password>@cluster0.xxxx.mongodb.net/shopverse
-
-# --- Server ---
-PORT=5000
-
-# --- JWT ---
-# Use a long, random string
-JWT_SECRET=your_jwt_secret_string
-
-# --- Razorpay ---
-# Get these from your Razorpay Dashboard
-RAZORPAY_KEY_ID=YOUR_KEY_ID
-RAZORPAY_KEY_SECRET=YOUR_KEY_SECRET
-B. Frontend: Create a file at apps/frontend/.env.local
-
-Ini, TOML
-
-# --- API URL ---
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-
-# --- Razorpay ---
-# This is your PUBLIC key, not the secret
-NEXT_PUBLIC_RAZORPAY_KEY_ID=YOUR_KEY_ID
-4. Seed the Database (Optional)
-You can populate the database with sample products using the seeder script.
-
-Bash
-
-# Run this from the root directory
-pnpm --filter backend run seed
-To destroy all data:
-
-Bash
-
-pnpm --filter backend run seed:destroy
-5. Running the Application
-You will need two separate terminals.
-
-Terminal 1: Run the Backend Server
-
-Bash
-
-# From the root directory
+```bash
 pnpm --filter backend run dev
-Server will be running at http://localhost:5000
+```
 
-Terminal 2: Run the Frontend Server
+The API listens on [http://localhost:5000](http://localhost:5000). The health route is [http://localhost:5000/api](http://localhost:5000/api).
 
-Bash
+**Terminal 2 — frontend**
 
-# From the root directory
+```bash
 pnpm --filter frontend run dev
-Server will be running at http://localhost:3000
+```
 
-📂 Project Structure
-A high-level overview of the monorepo structure.
+Open [http://localhost:3000](http://localhost:3000).
 
-shopverse-mono/
-│
+## Optional: seed sample products
+
+The seed command inserts sample products only when the products collection is empty. It does not delete existing products or users.
+
+```bash
+pnpm --filter backend run seed
+```
+
+The legacy `seed:destroy` command is intentionally disabled to avoid accidental database deletion.
+
+## Repository structure
+
+```text
+ShopVerse/
 ├── apps/
-│   │
 │   ├── backend/
 │   │   ├── src/
-│   │   │   ├── config/       (DB connection)
-│   │   │   ├── controllers/  (Route logic)
-│   │   │   ├── middleware/   (Auth guard)
-│   │   │   ├── models/       (Mongoose schemas)
-│   │   │   ├── routes/       (API endpoints)
-│   │   │   ├── utils/        (Token generator)
-│   │   │   ├── seeder.ts     (Sample data script)
-│   │   │   └── index.ts      (Server entry)
-│   │   ├── .env
+│   │   │   ├── config/
+│   │   │   ├── controllers/
+│   │   │   ├── middleware/
+│   │   │   ├── models/
+│   │   │   ├── routes/
+│   │   │   ├── utils/
+│   │   │   ├── index.ts
+│   │   │   └── seeder.ts
+│   │   ├── .env.example
 │   │   └── package.json
-│   │
 │   └── frontend/
+│       ├── public/
 │       ├── src/
-│       │   ├── app/          (Next.js App Router pages)
-│       │   ├── components/   (Reusable components)
-│       │   ├── context/      (AuthContext, CartContext)
-│       │   ├── types/        (Shared interfaces)
-│       │   └── ...
-│       ├── .env.local
+│       │   ├── app/
+│       │   ├── components/
+│       │   ├── context/
+│       │   └── types/
+│       ├── .env.example
 │       └── package.json
-│
-├── package.json          (Root package.json)
-└── pnpm-workspace.yaml   (Defines the monorepo)
-🛣️ Roadmap
-This project is the MVP. Future enhancements include:
+├── package.json
+├── pnpm-lock.yaml
+└── pnpm-workspace.yaml
+```
 
-[ ] Admin Dashboard: CRUD products, view orders, manage users.
+## Notes
 
-[ ] Image Uploads: Integrate Cloudinary or S3 for product image hosting.
-
-[ ] Google OAuth: Add "Sign in with Google" functionality.
-
-[ ] Search & Filtering: A search bar and category filters on the home page.
-
-[ ] Product Reviews: Allow logged-in users to leave reviews.
-
-[ ] Caching: Implement Redis for caching products.
-
-[ ] Deployment: Dockerize and deploy (Vercel for frontend, Render/AWS for backend).
+- Product image rendering currently uses placeholders in the UI.
+- Configure your own MongoDB connection and Razorpay test credentials before testing registration, orders, or checkout.
+- The project is an MVP and should receive a security review before production deployment.
