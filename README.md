@@ -20,7 +20,7 @@ ShopVerse is a full-stack e-commerce monorepo with a Next.js frontend, an Expres
 
 ## Prerequisites
 
-- **Node.js 20.9 or later** (required by Next.js 16)
+- **Node.js 24 LTS recommended** (Next.js 16 requires Node.js 20.9 or later)
 - pnpm 10 (the repository declares pnpm 10.20.0)
 - MongoDB Atlas account or a local MongoDB instance
 - Razorpay account and test-mode API keys for payment testing
