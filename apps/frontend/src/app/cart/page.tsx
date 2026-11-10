@@ -49,8 +49,18 @@ export default function CartPage() {
             <div className="bg-white shadow rounded-lg divide-y divide-gray-200">
               {cartItems.map((item) => (
                 <div key={item.product._id} className="flex items-center p-4">
-                  {/* Image Placeholder */}
-                  <div className="w-20 h-20 bg-gray-200 rounded flex-shrink-0"></div>
+                  <div className="h-20 w-20 flex-shrink-0 overflow-hidden rounded bg-gray-50 p-1">
+                    <img
+                      src={item.product.image || '/images/product-placeholder.svg'}
+                      alt={item.product.name}
+                      loading="lazy"
+                      className="h-full w-full object-contain"
+                      onError={(event) => {
+                        event.currentTarget.onerror = null;
+                        event.currentTarget.src = '/images/product-placeholder.svg';
+                      }}
+                    />
+                  </div>
                   
                   <div className="flex-grow mx-4">
                     <Link 
