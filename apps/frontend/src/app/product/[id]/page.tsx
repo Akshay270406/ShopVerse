@@ -89,8 +89,16 @@ export default function ProductDetailsPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {/* Col 1: Image */}
         <div className="lg:col-span-1">
-          <div className="w-full h-96 bg-gray-200 flex items-center justify-center rounded-lg shadow-md">
-            <span className="text-gray-500">(Product Image)</span>
+          <div className="flex h-96 w-full items-center justify-center rounded-lg bg-gray-50 p-5 shadow-md">
+            <img
+              src={product.image || '/images/product-placeholder.svg'}
+              alt={product.name}
+              className="h-full w-full object-contain"
+              onError={(event) => {
+                event.currentTarget.onerror = null;
+                event.currentTarget.src = '/images/product-placeholder.svg';
+              }}
+            />
           </div>
         </div>
 
