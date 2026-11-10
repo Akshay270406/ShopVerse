@@ -41,6 +41,72 @@ const sampleProducts = [
     rating: 3,
     numReviews: 12,
   },
+  {
+    name: 'Pirate Captain Collectible Figure',
+    image: '/images/figurines/pirate-captain.webp',
+    description: 'A dynamic anime-style pirate captain collectible with a flowing coat, straw hat, and confident battle-ready pose. Display piece for anime figure collectors.',
+    brand: 'Anime Collectibles',
+    category: 'Anime Figurines',
+    price: 2799,
+    countInStock: 8,
+    rating: 4.9,
+    numReviews: 18,
+  },
+  {
+    name: 'Azure Sorcerer Collectible Figure',
+    image: '/images/figurines/azure-sorcerer.webp',
+    description: 'A premium anime-style sorcerer figure featuring a dramatic dark outfit, vivid blue accents, and a confident standing pose.',
+    brand: 'Anime Collectibles',
+    category: 'Anime Figurines',
+    price: 3299,
+    countInStock: 6,
+    rating: 4.8,
+    numReviews: 14,
+  },
+  {
+    name: 'Flame Swordsman Collectible Figure',
+    image: '/images/figurines/flame-swordsman.webp',
+    description: 'A detailed anime-style swordsman collectible with a patterned cloak, katana, and flame-inspired color palette.',
+    brand: 'Anime Collectibles',
+    category: 'Anime Figurines',
+    price: 2599,
+    countInStock: 9,
+    rating: 4.7,
+    numReviews: 21,
+  },
+  {
+    name: 'Silver-Haired Ninja Collectible Figure',
+    image: '/images/figurines/silver-haired-ninja.webp',
+    description: 'A masked silver-haired ninja figure in a relaxed battle-ready stance, with layered tactical clothing and finely sculpted details.',
+    brand: 'Anime Collectibles',
+    category: 'Anime Figurines',
+    price: 2899,
+    countInStock: 7,
+    rating: 4.8,
+    numReviews: 16,
+  },
+  {
+    name: 'Crimson Mage Collectible Figure',
+    image: '/images/figurines/crimson-mage.webp',
+    description: 'A fantasy anime-style mage collectible wearing a crimson cloak and ornate accessories, posed with a magical staff.',
+    brand: 'Anime Collectibles',
+    category: 'Anime Figurines',
+    price: 2299,
+    countInStock: 10,
+    rating: 4.6,
+    numReviews: 12,
+  },
+  {
+    name: 'Emerald Archer Collectible Figure',
+    image: '/images/figurines/emerald-archer.webp',
+    description: 'An elegant fantasy anime-style archer collectible with emerald accents, a detailed bow, and a scenic display base.',
+    brand: 'Anime Collectibles',
+    category: 'Anime Figurines',
+    price: 3499,
+    countInStock: 5,
+    rating: 4.9,
+    numReviews: 11,
+  },
 ];
 
 dotenv.config();
@@ -49,15 +115,27 @@ const importData = async () => {
   try {
     await connectDB();
 
-    // Never overwrite existing products or users when seeding.
-    const existingProducts = await Product.countDocuments();
-    if (existingProducts > 0) {
-      console.log('Seed skipped: products already exist in this database.');
-      return;
+    // Insert missing products only. Existing catalog entries are left untouched.
+    let added = 0;
+    let alreadyPresent = 0;
+
+    for (const product of sampleProducts) {
+      const result = await Product.updateOne(
+        { name: product.name },
+        { $setOnInsert: product },
+        { upsert: true }
+      );
+
+      if (result.upsertedCount > 0) {
+        added += 1;
+      } else {
+        alreadyPresent += 1;
+      }
     }
 
-    await Product.insertMany(sampleProducts);
-    console.log('Data imported!');
+    console.log(
+      `Seed complete: added ${added} products; ${alreadyPresent} already existed.`
+    );
   } catch (error) {
     console.error(`Error: ${error}`);
     process.exitCode = 1;
