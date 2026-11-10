@@ -1,9 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { IProduct } from '@/types'; // Import our new type
-
-// We will add an Image component later. For now, <img> is fine.
-// We'll also add a Rating component.
+import { IProduct } from '@/types';
 
 interface ProductCardProps {
   product: IProduct;
@@ -11,30 +8,40 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   return (
-    <div className="border rounded-lg shadow-md overflow-hidden bg-white">
-      {/* Product Image (using a placeholder for now) */}
-      <Link href={`/product/${product._id}`}>
-        <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-          {/* We'll replace this with <Image /> later */}
-          <span className="text-gray-500">(Product Image)</span>
+    <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg">
+      <Link href={`/product/${product._id}`} className="block">
+        <div className="flex h-64 items-center justify-center bg-gray-50 p-4">
+          <img
+            src={product.image || '/images/product-placeholder.svg'}
+            alt={product.name}
+            loading="lazy"
+            className="h-full w-full object-contain"
+            onError={(event) => {
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = '/images/product-placeholder.svg';
+            }}
+          />
         </div>
       </Link>
 
-      {/* Product Info */}
       <div className="p-4">
         <Link
           href={`/product/${product._id}`}
-          className="block text-lg font-semibold text-gray-800 hover:text-blue-600 truncate"
+          className="block truncate text-lg font-semibold text-gray-800 hover:text-blue-600"
         >
           {product.name}
         </Link>
-
-        {/* We'll add a <Rating /> component here */}
         <div className="my-2 text-sm text-gray-500">
           {product.numReviews} reviews
         </div>
-
-        <h3 className="text-2xl font-bold text-gray-900">₹{product.price}</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-2xl font-bold text-gray-900">
+            ₹{product.price.toLocaleString('en-IN')}
+          </h3>
+          <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-medium text-purple-700">
+            {product.category}
+          </span>
+        </div>
       </div>
     </div>
   );
