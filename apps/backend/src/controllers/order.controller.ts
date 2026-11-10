@@ -71,6 +71,15 @@ export const verifyPayment = async (req: AuthRequest, res: Response) => {
       return res.status(404).json({ message: 'Order not found' });
     }
 
+    // Only the owner of this order may verify its payment.
+    if (order.user.toString() !== req.user!._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized to verify this order' });
+    }
+
+    if (order.razorpay_order_id !== razorpay_order_id) {
+      return res.status(400).json({ message: 'Razorpay order ID mismatch' });
+    }
+
     // 2. Verify the Razorpay signature
     const body = order.razorpay_order_id + '|' + razorpay_payment_id;
     const expectedSignature = crypto
