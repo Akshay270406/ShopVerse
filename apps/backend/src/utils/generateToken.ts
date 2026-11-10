@@ -11,7 +11,7 @@ const generateToken = (res: Response, userId: Types.ObjectId) => {
   // Set the token as a secure, HTTP-only cookie
   res.cookie('jwt', token, {
     httpOnly: true, // Prevents client-side JS access (XSS)
-    secure: process.env.NODE_ENV !== 'development', // Use secure cookies in production
+    secure: process.env.NODE_ENV === 'production', // Secure cookies only when served over HTTPS
     sameSite: 'strict', // Prevents CSRF attacks
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days in milliseconds
   });
