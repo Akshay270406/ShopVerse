@@ -14,6 +14,7 @@ ShopVerse is a full-stack e-commerce monorepo with a Next.js frontend, an Expres
 
 - User registration, login, and logout using an HTTP-only JWT cookie
 - Product listing and product details
+- Anime figurine sample catalogue with locally stored product images
 - Persistent client-side shopping cart
 - Protected shipping, checkout, and order-history pages
 - Razorpay order creation and payment-signature verification
@@ -81,7 +82,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Optional: seed sample products
 
-The seed command inserts sample products only when the products collection is empty. It does not delete existing products or users.
+The seed command inserts any missing sample products by name and leaves existing products and users untouched. It is safe to rerun after new sample products are added.
 
 ```bash
 pnpm --filter backend run seed
@@ -108,6 +109,7 @@ ShopVerse/
 │   │   └── package.json
 │   └── frontend/
 │       ├── public/
+│       │   └── images/figurines/  (sample anime-style figure images)
 │       ├── src/
 │       │   ├── app/
 │       │   ├── components/
